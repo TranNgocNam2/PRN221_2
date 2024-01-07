@@ -1,0 +1,38 @@
+﻿<Window x:Class="FolderManagement.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FolderManagement"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="45*"/>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition Width="16*"/>
+            <ColumnDefinition Width="727*"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="filesListView" HorizontalAlignment="Left" Height="252" Margin="0,182,0,0" VerticalAlignment="Top" Width="800" d:ItemsSource="{d:SampleData ItemCount=5}" FontSize="14" Grid.ColumnSpan="4" SelectionChanged="filesListView_SelectionChanged" MouseDoubleClick="filesListView_MouseDoubleClick">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Type" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="18" Height="18" Margin="29 5 0 0" Source="{Binding Type}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" Width="350" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Path" Width="350" DisplayMemberBinding="{Binding Path}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="browse_file_btn" Content="Browse Files" HorizontalAlignment="Left" Height="31" Margin="523,46,0,0" VerticalAlignment="Top" Width="116" FontSize="14" FontWeight="Bold" Click="browse_file_btn_Click" Grid.Column="3"/>
+        <Label x:Name="folder_lable" Content="Folder Name:" HorizontalAlignment="Left" Height="43" Margin="0,46,0,0" VerticalAlignment="Top" Width="125" FontSize="15" HorizontalContentAlignment="Center" FontWeight="Bold" Grid.Column="3"/>
+        <TextBox x:Name="folder_path" HorizontalAlignment="Left" Height="31" Margin="125,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="376" FontSize="15" Grid.Column="3" IsReadOnly="True"/>
+        <Button x:Name="create_btn" Content="Create" HorizontalAlignment="Left" Height="30" Margin="181,116,0,0" VerticalAlignment="Top" Width="146" Click="create_btn_Click" Grid.Column="3"/>
+        <Button x:Name="delete_btn" Content="Delete" HorizontalAlignment="Left" Height="30" Margin="411,116,0,0" VerticalAlignment="Top" Width="146" Grid.Column="3" Click="delete_btn_Click"/>
+        <Button x:Name="previous_folder_btn" Grid.Column="3" Content="&#x2190;" HorizontalAlignment="Left" Height="31" Margin="654,46,0,0" VerticalAlignment="Top" Width="54" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.496,0.414" Click="previous_folder_btn_Click"/>
+    </Grid>
+</Window>
