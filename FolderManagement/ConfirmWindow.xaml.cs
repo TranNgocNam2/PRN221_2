@@ -80,7 +80,6 @@ namespace FolderManagement
                 MessageBox.Show("Create new file successfully!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
                 ItemList.Add(new MainWindow.Item
                 {
-                    Type = "D:\\Code_PRN221\\FolderManagement\\FolderManagement\\Images\\file_icon.png",
                     Name = filename,
                     Path = filePath
                 });
@@ -110,7 +109,6 @@ namespace FolderManagement
                 MessageBox.Show("Create new folder successfully!", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
                 ItemList.Add(new MainWindow.Item
                 {
-                    Type = "D:\\Code_PRN221\\FolderManagement\\FolderManagement\\Images\\folder_icon.png",
                     Name = foldername,
                     Path = folderPath
                 });

@@ -17,6 +17,11 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.ObjectModel;
 using Path = System.IO.Path;
+using System.Windows.Interop;
+using System.Drawing;
+using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
+using System.Diagnostics;
 
 namespace FolderManagement
 {
@@ -29,12 +34,12 @@ namespace FolderManagement
         {
             InitializeComponent();
             filesListView.SelectionChanged += filesListView_SelectionChanged;
-            filesListView.MouseDoubleClick += filesListView_MouseDoubleClick;
+            //filesListView.MouseDoubleClick += filesListView_MouseDoubleClick;
         }
         private string rootFolderPath = "";
         public class Item
         {
-            public string? Type { get; set; }
+            public ImageSource? Type { get; set; }
             public string? Name { get; set; }
             public string? Path { get; set; }
         }
@@ -57,6 +62,28 @@ namespace FolderManagement
             }
         }
 
+        public ImageSource? GetApplicationIcon(string path)
+        {
+            ImageSource? appIcon = null;
+            try { 
+            
+                if (File.Exists(path))
+                {
+                    System.Drawing.Icon? fileIcon = System.Drawing.Icon.ExtractAssociatedIcon(path);
+                    appIcon = Imaging.CreateBitmapSourceFromHIcon(fileIcon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+                else if(Directory.Exists(path))
+                {
+                    System.Drawing.Icon? folderIcon = Image.GetFolderIcon();
+                    appIcon = Imaging.CreateBitmapSourceFromHIcon(folderIcon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error getting application icon: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return appIcon;
+        }
 
         public void scanFilesAndSubfolders(string path)
         {
@@ -70,9 +97,10 @@ namespace FolderManagement
                 
                 foreach (var file in files)
                 {
+                    string filePath = Path.GetFullPath(file);
                     list.Add(new Item 
                     { 
-                        Type = "D:\\Code_PRN221\\FolderManagement\\FolderManagement\\Images\\file_icon.png", 
+                        Type = GetApplicationIcon(filePath), 
                         Name = Path.GetFileName(file), 
                         Path = Path.GetFullPath(file)
                     });
@@ -82,7 +110,7 @@ namespace FolderManagement
                 {
                     list.Add(new Item 
                     { 
-                        Type = "D:\\Code_PRN221\\FolderManagement\\FolderManagement\\Images\\folder_icon.png", 
+                        Type = GetApplicationIcon(path), 
                         Name = Path.GetFileName(folder), 
                         Path = Path.GetFullPath(folder) 
                     });
@@ -185,8 +213,19 @@ namespace FolderManagement
                 if (selectedItem != null && !string.IsNullOrEmpty(selectedItem.Path))
                 {
                     if (Directory.Exists(selectedItem.Path)) {
-                        rootFolderPath = selectedItem.Path;
-                        scanFilesAndSubfolders(selectedItem.Path);
+                        Process.Start("explorer.exe", selectedItem.Path);
+                    }
+                    else if (File.Exists(selectedItem.Path))
+                    {
+                        try 
+                        {
+                            System.Diagnostics.Process.Start(new ProcessStartInfo(selectedItem.Path) { UseShellExecute = true });
+                        }
+                        catch (Exception ex) 
+                        {
+                            MessageBox.Show($"Error: {ex.Message}");
+                        }
+                        
                     }
                 }
             }
